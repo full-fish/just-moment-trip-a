@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
 import Navbar from '../components/common/Navbar';
 import './Home.css';
 
+const Box = styled.div`
+  position: fixed;
+  padding: ${props => props.padding};
+  display: flex;
+  justify-content: ${props => props.display};
+  font-size: 40px;
+  font-family: ManfuMedium;
+  text-decoration: none;
+  margin-top: 40px;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #ff6670;
+  :hover {
+    transition: all 0.2s linear;
+    transform: scale(1.2);
+  }
+`;
+
 function Home() {
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
+  const isLoggedIn = useSelector(state => state.sign.isLoggedIn);
   return (
     <>
       <Navbar />
@@ -28,12 +40,12 @@ function Home() {
                   <div id="master-container-scroller">
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        MISSING
+                        MOMENT
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        MOMENT
+                        REMEMBER
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
@@ -48,46 +60,61 @@ function Home() {
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        FRIEND
+                        FRIENDLY
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        FAMILY
+                        MUKBANG
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        NEW WORLD
+                        GO
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        PRESENT
+                        ENJOY
                       </a>
                     </div>
                     <div className="master-container-scroller_item">
                       <a className="cta-link" href="#">
-                        EVERYTHING
+                        UNIVERSAL
                       </a>
                     </div>
                     <div className="master-container-scroller_item">SAVE</div>
                   </div>
                   <div>TRIP</div>
                 </h1>
+                <div className="SignLinkBox">
+                  <div className="SigninLinkBox">
+                    {isLoggedIn ? (
+                      <Box display="center" padding="170px 0 0 108px">
+                        <StyledLink className="LoginSpan" to="/trip">
+                          <span>시작하기</span>
+                        </StyledLink>
+                      </Box>
+                    ) : (
+                      <Box display="space - evenly" padding="170px 0 0 0">
+                        <StyledLink className="LoginSpan" to="/sign-up">
+                          <span
+                            className="LoginSpan"
+                            style={{ marginRight: '90px' }}
+                          >
+                            함께하기
+                          </span>
+                        </StyledLink>
+                        <StyledLink className="LoginSpan" to="/sign-in">
+                          <span>시작하기</span>
+                        </StyledLink>
+                      </Box>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </section>
-        </div>
-        <div className="SignLinkBox">
-          <div className="SigninLinkBox">
-            <Link to="/sign-up">
-              <span>함께하기</span>
-            </Link>
-            <Link to="/sign-in">
-              <span>Start</span>
-            </Link>
-          </div>
         </div>
       </div>
     </>

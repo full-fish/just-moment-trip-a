@@ -2,22 +2,58 @@ import React from 'react';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import TextField from './TextField';
 import { signUp } from '../../modules/Reducers/userReducer';
+import jmt from '../../Assets/JMT_logo.png';
+
+const StyledWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100vh;
+`;
 
 const Container = styled.div`
+  position: relative;
+  background-color: #ffffff;
   text-align: center;
+  width: 400px;
+  height: 600px;
+  margin: 1rem auto;
+  border-radius: 1.5em;
+  box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+
+  & > form {
+    padding-top: 20px;
+  }
+  @media (max-width: 600px) {
+    .Container {
+      border-radius: 0px;
+    }
+  }
 `;
 
-const HeadTag = styled.h1`
+const Btn = styled.button`
+  cursor: pointer;
+  border-radius: 2em;
+  color: #fff;
+  background: linear-gradient(to right, #9c27b0, #e040fb);
+  border: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
   text-align: center;
 `;
-
-const Btn = styled.button``;
 
 function SignUpInput() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const pwdReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g;
 
   const validate = Yup.object({
@@ -49,19 +85,29 @@ function SignUpInput() {
     const { email, nickname, password } = values;
     dispatch(signUp({ email, nickname, password }))
       .unwrap()
-      .then(res => {
-        console.log(res);
-        // actions.setSubmittings(false);
-        alert('Thanks');
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          text: '회원가입 성공 !',
+        }).then(res => {
+          if (res.isConfirmed) navigate('/');
+        });
       })
       .catch(err => {
-        console.log(err);
         if (err) {
-          actions.resetForm();
-          alert(`Email elready exist`);
+          Swal.fire({
+            icon: 'error',
+            text: '이미 사용중인 이메일 입니다',
+          }).then(res => {
+            if (res.isConfirmed) actions.resetForm();
+          });
         } else {
-          actions.resetForm();
-          alert(`Failed to sign up please try again`);
+          Swal.fire({
+            icon: 'error',
+            text: '회원가입에 실패 하셨습니다',
+          }).then(res => {
+            if (res.isConfirmed) actions.resetForm();
+          });
         }
       });
   };
@@ -78,20 +124,22 @@ function SignUpInput() {
       onSubmit={signUpRequest}
     >
       {() => (
-        <Container>
-          <HeadTag>Sign-Up</HeadTag>
-          <Form>
-            <TextField label="Email" name="email" type="email" />
-            <TextField label="NickName" name="nickname" type="text" />
-            <TextField label="Password" name="password" type="password" />
-            <TextField
-              label="Confirm-Password"
-              name="confirmPassword"
-              type="password"
-            />
-            <Btn type="submit">SignUp</Btn>
-          </Form>
-        </Container>
+        <StyledWrapper>
+          <Container>
+            <img src={jmt} alt="JMT" />
+            <Form>
+              <TextField label="Email" name="email" type="email" />
+              <TextField label="NickName" name="nickname" type="text" />
+              <TextField label="Password" name="password" type="password" />
+              <TextField
+                label="Confirm-Password"
+                name="confirmPassword"
+                type="password"
+              />
+              <Btn type="submit">Sign Up</Btn>
+            </Form>
+          </Container>
+        </StyledWrapper>
       )}
     </Formik>
   );

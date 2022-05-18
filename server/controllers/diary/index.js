@@ -9,56 +9,15 @@ const nGram = require("./nGram");
 
 module.exports = {
   get: async (req, res) => {
-    console.log("겟요청임이이이");
     try {
       const validity = await tokenHandler.accessTokenVerify(req, res);
       if (validity) {
         const { trip_id, search, searchType } = req.query;
         const data = await diary.findAll({
-          // where: {
-          //   trip_id,
-          //   [Op.or]: [
-          //     { title: { [Op.regexp]: fuzzy.createFuzzyMatcher(search) } },
-          //     {
-          //       title:
-          //         levenshteinDistance.levenshteinDistance(search, Sequelize.col("diary.title")) <= 1
-          //           ? false
-          //           : true,
-          //     },
-          //   ],
-          // },
-          //!
-          // where: {
-          //   trip_id,
-          //   [Op.or]: [
-          //     sequelize.where(sequelize.fn("char_length", sequelize.col("title")), 2),
-          //     (a = sequelize.where(sequelize.col("title"))),
-          //     sequelize.where(
-          //       sequelize.fn(
-          //         levenshteinDistance.levenshteinDistance(
-          //           a,
-          //           await diary.findAll({
-          //             where: {
-          //               title: a,
-          //             },
-          //           })
-          //         )
-          //       )
-          //     ),
-          //     sequelize.where(levenshteinDistance.levenshteinDistance("a", sequelize.col("title"))),
-          //   ],
-          // },
-          //!
-          // where: {
-          //   title: sequelize.fn(aa(1, this.diary.sequelize.col("title"))),
-          // },
-          // "b"
-          //!원래
           where: {
             trip_id,
           },
         });
-        // data.forEach((ele) => console.log(ele.title));
         const hashtagsInfo = await diary.findAll({
           include: [
             {
@@ -86,12 +45,14 @@ module.exports = {
           });
           fuzzy.sort(fuzzyData, search);
           levenshteinData = data.filter((ele) => {
-            return levenshteinDistance.levenshteinDistance(ele.dataValues.title, search) <= 1;
+            return (
+              levenshteinDistance.levenshteinDistance_upgrade(ele.dataValues.title, search, 1) <= 1
+            );
           });
           nGramData = data.filter((ele) => {
             if (
-              nGram.diff_ngram(ele.dataValues.title, search, 2) >= 0.25 ||
-              nGram.diff_ngram(ele.dataValues.content, search, 1) === 1
+              nGram.diff_ngram(ele.dataValues.title, search, 3) >= 0.27 ||
+              nGram.diff_ngram(ele.dataValues.title, search, 1) === 1
             )
               return true;
           });
@@ -101,11 +62,14 @@ module.exports = {
           });
           fuzzy.sort(fuzzyData, search);
           levenshteinData = data.filter((ele) => {
-            return levenshteinDistance.levenshteinDistance(ele.dataValues.content, search) <= 1;
+            return (
+              levenshteinDistance.levenshteinDistance_upgrade(ele.dataValues.content, search, 1) <=
+              1
+            );
           });
           nGramData = data.filter((ele) => {
             if (
-              nGram.diff_ngram(ele.dataValues.content, search, 2) >= 0.25 ||
+              nGram.diff_ngram(ele.dataValues.content, search, 3) >= 0.27 ||
               nGram.diff_ngram(ele.dataValues.content, search, 1) === 1
             )
               return true;

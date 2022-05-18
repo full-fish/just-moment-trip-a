@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
 const NavbarBox = styled.div`
   display: flex;
   position: fixed;
@@ -10,55 +9,87 @@ const NavbarBox = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  font-size: 20px;
+  font-size: 1em;
   font-family: ManfuMedium;
-  padding: 20px 0px;
+  padding: 1em 5px;
   width: 100%;
-  background-color: #b39bf2;
+  background-color: rgb(72, 56, 137);
+  z-index: 100;
+`;
+
+const NavDivBox = styled.div`
+  padding: 0 5px;
+  :hover {
+    transition: all 0.4s ease-in;
+    border-top: 1px solid pink;
+  }
 `;
 
 function Navbar() {
   return (
     <NavbarBox>
       <div>
-        <div className="Navbar_1" style={{ padding: '0 5px' }}>
-          <Link style={{ textDecoration: 'none', color: 'black' }} to="/">
+        <NavDivBox>
+          <Link
+            style={{
+              textDecoration: 'none',
+              color: 'whitesmoke',
+            }}
+            to="/"
+          >
             HOME
           </Link>
-        </div>
+        </NavDivBox>
       </div>
       <div style={{ display: 'flex' }}>
-        <div className="Navbar_2" style={{ padding: '0 5px' }}>
-          <Link style={{ textDecoration: 'none', color: 'black' }} to="/diary">
+        <NavDivBox>
+          <Link
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
+            to="/trip"
+          >
+            TRIP
+          </Link>
+        </NavDivBox>
+        <NavDivBox>
+          <Link
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
+            to="/diary"
+          >
             DIARY
           </Link>
-        </div>
-        <div className="Navbar_3" style={{ padding: '0 5px' }}>
+        </NavDivBox>
+        <NavDivBox>
           <Link
-            style={{ textDecoration: 'none', color: 'black' }}
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
             to="/account"
           >
             ACCOUNT
           </Link>
-        </div>{' '}
-        <div className="Navbar_4" style={{ padding: '0 5px' }}>
-          <Link style={{ textDecoration: 'none', color: 'black' }} to="/mypage">
+        </NavDivBox>
+        <NavDivBox>
+          <Link
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
+            to="/mypage"
+          >
             MYPAGE
           </Link>
-        </div>
-        <div className="Navbar_5" style={{ padding: '0 5px' }}>
+        </NavDivBox>
+        <NavDivBox>
           <Link
-            style={{ textDecoration: 'none', color: 'black' }}
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
             to="/aboutUs"
           >
             ABOUTUS
           </Link>
-        </div>
-        <div className="Navbar_6" style={{ padding: '0 5px' }}>
-          <Link style={{ textDecoration: 'none', color: 'black' }} to="/info">
+        </NavDivBox>
+        <NavDivBox>
+          <Link
+            style={{ textDecoration: 'none', color: 'whitesmoke' }}
+            to="/info"
+          >
             INFO
           </Link>
-        </div>
+        </NavDivBox>
       </div>
     </NavbarBox>
   );

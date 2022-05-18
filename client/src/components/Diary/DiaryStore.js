@@ -1,5 +1,4 @@
 const axios = require('../../services/diary');
-let trip_id = 1;
 import React, {
   useCallback,
   useEffect,
@@ -8,7 +7,6 @@ import React, {
   useState,
 } from 'react';
 import DiaryList from './DiaryList';
-import dummydata from './dummydata';
 
 const INIT = 'INIT';
 const CREATE = 'CREATE';
@@ -27,7 +25,6 @@ const reducer = (state, action) => {
         ...action.data,
         createDate,
       };
-      console.log('--------🚨 CREATE시 reducer의 state-------- :', state);
       return [newItem, ...state];
     }
     case REMOVE: {
@@ -57,6 +54,7 @@ function DiaryStore() {
   const dataId = useRef(0);
   const [search, setSearch] = React.useState('');
   const [searchType, setSearchType] = React.useState('');
+  const trip_id = JSON.parse(localStorage.getItem('trip_id'));
 
   const changeInput = e => {
     if (e.key === 'Enter') {
@@ -72,31 +70,29 @@ function DiaryStore() {
       const initData = data.data.data;
       dispatch({ type: INIT, data: initData });
     });
-  }, [search, isTrue]);
+  }, [search, isTrue, searchType]);
 
   const onCreate = useCallback((title, content, write_date, hashtags) => {
     dispatch({
       type: CREATE,
       data: { title, content, write_date, hashtags, id: dataId.current },
     });
-    console.log('--------🚨 Store의 data-------- :', data);
+    // console.log('--------🚨 Store의 data-------- :', data);
     // console.log('--------🦭 Store의 Content-------- :', content);
     // console.log('--------🦭 Store의 Hashtags-------- :', hashtags);
     dataId.current += 1;
-    console.log('DiaryStore dataId 확인 :', dataId.current);
+    // console.log('DiaryStore dataId 확인 :', dataId.current);
     axios
       .diaryPost(trip_id, title, content, write_date, hashtags)
       .then(res => {
-        console.log(res);
-        console.log('312114');
         setIsTrue(currentIsTrue => !currentIsTrue);
-        console.log('--------------- onCreate', isTrue);
-        console.log(res.data);
+        // console.log('--------------- onCreate', isTrue);
+        // console.log(res.data);
+        console.log(res);
         console.log(res.status);
       })
       .catch(err => {
         console.log(err);
-        console.log('루저ㅋ ㅋ ㅋ ㅋ ㅋ ㅋ ㅋ ㅋ ㅋ ㅋ', err.status);
       });
   });
 
@@ -105,16 +101,12 @@ function DiaryStore() {
     axios
       .diaryRemove(targetId)
       .then(res => {
-        console.log('--------------- 삭제시', isTrue);
         console.log(res.data);
         console.log(res.status);
       })
       .catch(err => {
         console.log(err);
-        console.log('루저ㅋ', err.status);
-      })
-      .console.log('--------🚨 Store의 data-------- :', data);
-    console.log('DiaryStore onRemove 확인 :', targetId);
+      });
   }, []);
 
   const onEdit = useCallback(
@@ -135,17 +127,20 @@ function DiaryStore() {
         })
         .catch(err => {
           console.log(err);
-          console.log('루저ㅋ', err.status);
         });
-      console.log('Store의 new_content :', new_content);
-      console.log('Store의 new_hashtags :', new_hashtags);
     },
     [],
   );
 
   return (
-    <div className="DiaryStore">
-      <div>전체 일기 : {data.length}</div>
+    <div
+      className="DiaryStore"
+      style={{
+        width: '93%',
+        height: '100%',
+        padding: '90px 0 70px 0',
+      }}
+    >
       <DiaryList
         changeInput={changeInput}
         diaryList={data}

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import tokenHeader from './headers';
-let endpoint = 'http://localhost:8080';
+// let endpoint = 'http://localhost:8080';
+let endpoint = 'https://just-moment-trip.tk';
+
 //tk : 서버배포
 //ml : 클라배포
 // 서로 따로 실행하니 당연히 주소도 다르겠지 후후
@@ -23,6 +25,7 @@ export function accountPost(
   spent_person,
   memo,
   write_date,
+  gps,
 ) {
   let url = `${endpoint}/account`;
   return axios.post(
@@ -36,6 +39,7 @@ export function accountPost(
       spent_person,
       memo,
       write_date,
+      gps,
     },
     {
       headers: tokenHeader(),
